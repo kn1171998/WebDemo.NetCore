@@ -1,0 +1,116 @@
+﻿@model EmployeeDetailViewModel
+@{
+    ViewBag.Title = "Employee";
+    var relative = ViewBag.Relative;
+}
+<div class="col-md-12 grid-margin grid-margin-md-0">
+    <div class="card">
+        <div class="card-body">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">Employee List</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Employee Details</li>
+                </ol>
+            </nav><br /><br />        
+            <div><a class="btn btn-success" asp-controller="Relative" asp-action="Create" asp-route-myVar="@Model.Id" asp-route-emp="@Model.EmployeeId">Add Relative</a></div>
+            <div class="wrap d-flex justify-content-start justify-content-sm-center flex-wrap">
+                <img class="rounded-circle shadow-lg" style="width:200px; height:250px" src="@Url.Content(Model.ImageUrl)" alt="image" />
+                <div class="wrap align-items-center ml-5">
+                    <p class="font-weight-bold text-success" style="font-size:20px">@Model.EmployeeName</p>
+                    <p class="font-weight-normal">Gender: @Model.Gender</p>
+                    <p class="font-weight-normal">Date Of Birth: @Model.DOB.ToString("dd/MM/yyyy")</p>
+                    <p class="font-weight-normal">Employee Number: @Model.EmployeeId</p>
+                    <p class="font-weight-normal">NI Number: @Model.NationalInsuranceNo</p>
+                    <p class="font-weight-normal">Email: <a href="#">@Model.Email</a></p>
+                    <p class="font-weight-normal">Phone: <a href="tel:@Model.Phone">@Model.Phone</a></p>
+                    <br /><br />
+                    <p class="font-weight-bold">Pay Deductions</p>
+                    <hr style="background-color:crimson" />
+                    <p class="font-weight-normal">Payment Method: @Model.PaymentMethod</p>
+                    <p class="font-weight-normal"><i class="fas fa-envelope" style="margin-right:0.6em; color:cornflowerblue"></i><a href="mailto:@Model.Email?subject=Payslip&body=Attached within is your payslip">Send Payslip</a></p>
+                    <br /><br />
+                    <p class="font-weight-bold">Address</p>
+                    <hr style="background-color:crimson" />
+                    <p class="font-weight-normal">@Model.Address</p>
+                    <br /><br />
+                </div>
+                <br />
+                <div class="text-primary">RelationShip</div>
+                @Html.AntiForgeryToken()
+                <table class="table table-bordered table-striped table-responsive-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Gender</th>
+                            <th>RelationShip</th>
+                            <th>Date Of Birth</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in relative)
+                        {
+                            <tr>
+                                <td>@i.Name</td>
+                                <td>@i.Gender</td>
+                                <td>@i.Relationship</td>
+                                <td>@i.DOB</td>
+                                <td><button value="@i.Id" class="btn btn-primary deleteRela">Delete</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{ @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+<script>
+    $('table tbody').on('click', 'button.deleteRela', function () {
+           var token = $("[name='__RequestVerificationToken']").val();
+        var idRelationShip = $(this).val();
+        bootbox.confirm({
+            message: "You sure to delete?",
+            buttons: {
+                confirm: {
+                    label: "Yes",
+                    className: "btn-danger"
+                },
+                cancel: {
+                    label: "No",
+                    className: "btn-success"
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        url: "/Relative/Delete",
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            __RequestVerificationToken: token,
+                            id: idRelationShip
+                        },
+                        success: function (response) {
+                            if (response == true) {
+                                bootbox.alert({
+                                    message: " You have delete success",
+                                    callback: function () { location.href = '@Url.Action("Detail")'; }
+                                });
+                            }
+                            else {
+                                bootbox.alert("Error");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    })
+</script>
+}

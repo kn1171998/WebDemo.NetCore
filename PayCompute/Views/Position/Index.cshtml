@@ -1,0 +1,105 @@
+﻿@model IEnumerable<PositionJob>
+@{
+    ViewBag.Title = "Postion";
+}
+<div class="row">
+    <div class="col-md-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Postion</li>
+                    </ol>
+                </nav><br /><br />
+                <div class="row">
+                    <div class="col-md-12 table-responsive-md">
+                        <a class="btn btn-xs btn-outline-success float-md-right" asp-controller="Postion" asp-action="Create">New Postion</a>
+                        <div id="dialog-confirm"></div>
+                        @Html.AntiForgeryToken();
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Postion No.</th>
+                                    <th>Postion Name</th>
+                                    <th>Insurance Money</th>
+                                    <th class="text-warning">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.PositionJobCode</td>
+                                        <td>@item.PositionJobName</td>
+                                        <td>@item.InsuranceMoney</td>
+                                        <td>
+                                            <a class="btn text-primary" asp-controller="Position" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="fas fa-edit"></i>Edit
+                                            </a>
+                                            @*<a class="btn text-success" asp-controller="Department" asp-action="Detail" asp-route-id="@item.Id">
+                                                    <i class="fas fa-edit"></i>Detail
+                                                </a>*@
+                                            <button class="btn text-danger" id="posNo" value="@item.Id">
+                                                <i class="fas fa-trash-alt"></i>Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{ @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script>
+    $("#posNo").on("click", function () {
+        var token = $("[name='__RequestVerificationToken']").val();
+        var posNo = $(this).val();
+        bootbox.confirm({
+            message: "You sure to delete?",
+            buttons: {
+                confirm: {
+                    label: "Yes",
+                    className: "btn-danger"
+                },
+                cancel: {
+                    label: "No",
+                    className: "btn-success"
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        url: "/Position/Delete",
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            __RequestVerificationToken: token,
+                            id: posNo
+                        },
+                        success: function (response) {
+
+                            if (response.result == true) {
+                                bootbox.alert({
+                                    message: " You have delete success",
+                                    callback: function () { location.href = '@Url.Action("Index")'; }
+                                });
+                            }
+                            else {
+                                bootbox.alert("Error");
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>
+}

@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+   <TargetFramework>netcoreapp3.1</TargetFramework>
+<GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200208081733_TimeKeepingEMP.cs" />
+    <Compile Remove="Migrations\20200208081733_TimeKeepingEMP.Designer.cs" />
+    <Compile Remove="Migrations\20200208163735_TimeKeepingEMP1.cs" />
+    <Compile Remove="Migrations\20200208163735_TimeKeepingEMP1.Designer.cs" />
+    <Compile Remove="Migrations\20200208165011_TimeKeepingEMP1.cs" />
+    <Compile Remove="Migrations\20200208165011_TimeKeepingEMP1.Designer.cs" />
+    <Compile Remove="Migrations\20200208165334_TimekeepingEMP.cs" />
+    <Compile Remove="Migrations\20200208165334_TimekeepingEMP.Designer.cs" />
+    <Compile Remove="Migrations\20200208170710_dmmm.cs" />
+    <Compile Remove="Migrations\20200208170710_dmmm.Designer.cs" />
+    <Compile Remove="Migrations\20200212040207_editdb.cs" />
+    <Compile Remove="Migrations\20200212040207_editdb.Designer.cs" />
+    <Compile Remove="Migrations\20200213103200_update-datatypeDatejoine.cs" />
+    <Compile Remove="Migrations\20200213103200_update-datatypeDatejoine.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+   <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PayCompute.Entity\PayCompute.Entity.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,62 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+}
+@model LocationCreateViewModel
+<div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">Relative</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">New Relative</li>
+                </ol>
+            </nav><br /><br />
+            <form asp-controller="Location" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-row">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text bg-primary text-white">Select Department</label>
+                        </div>
+                        <select asp-for="DepartmentId" class="custom-select" asp-items="@(new SelectList(ViewBag.listDept,"Id","DepartmentName"))">
+                            @*@foreach (var i in (IEnumerable<Department>)ViewBag.listDept)
+                            {
+                                <option value="@i.Id">@i.DepartmentName</option>
+                            }*@
+                        </select>
+                        <span asp-validation-for="DepartmentId"></span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text bg-primary text-white">Select Position</label>
+                        </div>
+                        <select asp-for="PositionJobId" class="custom-select" asp-items="@(new SelectList(ViewBag.listPos,"Id","PositionJobName"))">
+                            @*@foreach (var j in (IEnumerable<PositionJob>)ViewBag.listPos)
+                            {
+                                <option value="@j.Id">@j.PositionJobName</option>
+                            }*@
+                        </select>
+                        <span asp-validation-for="PositionJobId"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text bg-primary text-white">Location Name</label>
+                        </div>
+                        <input asp-for="LocationName" class="form-control" placeholder="Enter Location Name" />
+                        <span asp-validation-for="LocationName" class="text-danger"></span>
+                    </div>
+                </div>
+                <center>
+                    <button type="submit" class="btn btn-primary" name="save" id="save"><i class="fa fa-save mr-2">Save</i></button>
+                </center>
+            </form>
+        </div>
+    </div>
+</div>

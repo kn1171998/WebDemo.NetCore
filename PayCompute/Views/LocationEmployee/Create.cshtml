@@ -1,0 +1,125 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model LocationEmployeeCreateViewModel
+<div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">Staff Placement</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">New Staff Placement</li>
+                </ol>
+            </nav><br /><br />
+            <form asp-controller="LocationEmployee" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label asp-for="PositionId">Position</label>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <select asp-for="PositionId" class="custom-select" asp-items="@(new SelectList(ViewBag.listPos,"Id","PositionJobName"))"></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label asp-for="LocationId"></label>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <select asp-for="LocationId" class="custom-select">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label asp-for="EmployeeId"></label>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <select asp-for="EmployeeId" class="custom-select" asp-items="@(new SelectList(ViewBag.listEMP,"Id","EmployeeName"))"></select>
+                    </div>
+                </div>
+                <br /><br />
+                <div class="form-group">
+                    <button type="submit" class="btn btn-rounded btn-primary float-left"><i class="fas fa-plus-square" style="margin-right:0.7em"></i>Save</button>
+                    <a asp-action="Index" class="btn btn-rounded btn-success float-right"><i class="fas fa-caret-square-left" style="margin-right:0.7em"></i>Back</a>
+                    <br />
+                    <br />
+                    <br />
+                </div>
+                <div>
+                    <table class="table table-bordered table-hover table-responsive-lg">
+                        <thead class="text-white bg-primary text-center">
+                            <tr>
+                                <th>Date Joined</th>
+                                <th>Placement</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listJoined">
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        var changeEmp =
+            $('#EmployeeId').change(function () {
+                $('#listJoined').html('');
+                var idEMP = $('#EmployeeId').val();
+                $.ajax({
+                    url: "/LocationEmployee/LoadLocationIdEMP",
+                    data: { id: idEMP },
+                    type: "GET",
+                    dataType: "Json",
+                    success: function (a) {
+                        console.log(a);
+                        //var JsonParseData = JSON.parse(response);
+                        //console.log(JsonParseData);
+                        if (!isEmpty(a)) {
+                            a.forEach(function (e) {
+                                var td = "<tr><td>" + e.datejoined + "</td><td>" + e.position + "-" + e.location + "</td>" +
+                                    "<td><input type='hidden' id='idPos' value='" + e.posID + "'/><input type='hidden' id='idPos' value='" + e.locaID + "'/></td></tr>";
+                                $('#listJoined').append(td);
+                            });
+                        }
+                    }
+                })
+            });
+        $(document).ready(function () {
+            //$('#PositionId option').prop("selected", true);
+            changePos();
+            changeEmp();
+        });
+        var changePos =
+            $('#PositionId').bind('change', function () {
+                $('#LocationId').html('');
+                var idPos = $('#PositionId').val();
+                $.ajax({
+                    url: "/LocationEmployee/LoadLocation_FlowPos",
+                    data: { id: idPos },
+                    type: "GET",
+                    dataType: "Json",
+                    success: function (a) {
+                        console.log(a);
+                        //var JsonParseData = JSON.parse(response);
+                        //console.log(JsonParseData);
+                        if (!isEmpty(a)) {
+                            a.forEach(function (e) {
+                                var td = "<option value='" + e.id + "'>" + e.locationName + "</option>";
+                                $('#LocationId').append(td);
+                            });
+                        }
+                    }
+                })
+            });
+    </script>
+}
