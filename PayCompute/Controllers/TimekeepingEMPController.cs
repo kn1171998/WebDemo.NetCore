@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PayCompute.Entity;
-using PayCompute.Models.TimekeepingEMP;
 using PayCompute.Service.Implementation;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PayCompute.Controllers
@@ -21,9 +19,9 @@ namespace PayCompute.Controllers
             this._departmentService = departmentService;
         }
 
-        public IActionResult GetData(DateTime day, int idDept)
+        public IActionResult GetData(int idDept)
         {
-            if (_timekeepingEMPService.CheckTimeKeeping(day))
+            if (_timekeepingEMPService.CheckTimeKeeping(DateTime.Now))
             {
                 var a = false;
                 return Json(a);
@@ -31,6 +29,20 @@ namespace PayCompute.Controllers
             else
             {
                 var a = _timekeepingEMPService.GetListEmployeeDept(idDept);
+                return Json(a);
+            }
+        }
+
+        public IActionResult GetData_Index(DateTime day, int idDept)
+        {
+            if (_timekeepingEMPService.CheckTimeKeeping(day))
+            {
+                var a = _timekeepingEMPService.GetListEmployeeDept_Index(idDept, day);
+                return Json(a);
+            }
+            else
+            {
+                var a = false;
                 return Json(a);
             }
         }
@@ -43,6 +55,7 @@ namespace PayCompute.Controllers
 
             return View(_departmentService.GetAll());
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection f)
@@ -57,16 +70,17 @@ namespace PayCompute.Controllers
                 var empid = item.employeeid.ToString();
                 timekeep.Status = f["Status_" + empid] == "1" ? true : false;
                 if (!timekeep.Status)
-                    timekeep.Furlough = f["furlough_" + empid] == "1" ? Furloughs.Yes : Furloughs.No;
+                    timekeep.Furlough = f["furlough_" + empid] == "1" ? true : false;
                 timekeep.Reason = f["Reason_" + empid];
                 timekeep.StartTimeKeeping = timekeep.DateTimeKeeping.TimeOfDay;
                 await _timekeepingEMPService.CreateAsync(timekeep);
             }
             return RedirectToAction(nameof(Index));
         }
+
         public IActionResult Index()
         {
-            return View();
+            return View(_departmentService.GetAll());
         }
     }
 }

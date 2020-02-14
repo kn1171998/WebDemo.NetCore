@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/PayComputePersistence/Migrations/20200214090810_dm.cs
+/PayComputePersistence/Migrations/20200214090810_dm.Designer.cs

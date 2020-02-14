@@ -530,8 +530,8 @@ namespace PayComputePersistence.Migrations
                     b.Property<TimeSpan>("EndTimeKeeping")
                         .HasColumnType("time");
 
-                    b.Property<int>("Furlough")
-                        .HasColumnType("int");
+                    b.Property<bool>("Furlough")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");

@@ -11,7 +11,7 @@ namespace PayCompute.Models.TimekeepingEMP
         public int employeeId { set; get; }
         public string employeename { set; get; }
         public string phone { set; get; }
-        public Furloughs furlough { set; get; }
+        public bool furlough { set; get; }
         public bool status { set; get; }
         public string reason { set; get; }
     }

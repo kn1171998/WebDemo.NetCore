@@ -13,17 +13,24 @@ namespace PayCompute.Service.Implementation
         public List<TimekeepingEMPCreateViewModel> GetListEmployeeDept(int idDept);
 
         public bool CheckTimeKeeping(DateTime date);
+
+        public List<TimekeepingEMPCreateViewModel> GetListEmployeeDept_Index(int idDept, DateTime day);
+
         public IEnumerable<LoadLocationEMP_FlowID> LoadLocationEMP_FlowID(int id);
     }
+
     public struct TimekeepingEMPCreateViewModel
     {
         public int employeeid { set; get; }
         public string employeename { set; get; }
         public string phone { set; get; }
-        public Furloughs furlough { set; get; }
+        public bool furlough { set; get; }
         public bool status { set; get; }
+        public TimeSpan starttimekeeping { set; get; }
+        public TimeSpan endtimekeeping { set; get; }
         public string reason { set; get; }
     }
+
     public struct LoadLocationEMP_FlowID
     {
         public DateTime datejoined { get; set; }
@@ -32,6 +39,7 @@ namespace PayCompute.Service.Implementation
         public int posID { set; get; }
         public int locaID { set; get; }
     }
+
     public class TimeKeepingEMPService : RepositoryBaseService<TimekeepingEMP>, ITimekeepingEMPService
     {
         public TimeKeepingEMPService(ApplicationDbContext context) : base(context)
@@ -58,6 +66,7 @@ namespace PayCompute.Service.Implementation
                      });
             return a;
         }
+
         public bool CheckTimeKeeping(DateTime date)
         {
             return _context.TimekeepingEMPs.Where(t => t.DateTimeKeeping == date).Select(t => t).Count() > 0 ? true : false;
@@ -75,6 +84,31 @@ namespace PayCompute.Service.Implementation
                      {
                          employeeid = locaEmp.EmployeeId,
                          employeename = emp.EmployeeName,
+                         phone = emp.Phone
+                     }).ToList();
+
+            return a;
+        }
+
+        public List<TimekeepingEMPCreateViewModel> GetListEmployeeDept_Index(int idDept, DateTime day)
+        {
+            var a = (from loca in _context.Locations
+                     join locaEmp in _context.LocationEmployees
+                     on loca.Id equals locaEmp.LocationId
+                     join emp in _context.Employees
+                     on locaEmp.EmployeeId equals emp.Id
+                     join timekeep in _context.TimekeepingEMPs
+                     on emp.Id equals timekeep.EmployeeId
+                     where loca.DepartmentId == idDept && timekeep.DateTimeKeeping == day
+                     select new TimekeepingEMPCreateViewModel
+                     {
+                         employeeid = locaEmp.EmployeeId,
+                         employeename = emp.EmployeeName,
+                         furlough = timekeep.Furlough,
+                         status = timekeep.Status,
+                         reason = timekeep.Reason,
+                         starttimekeeping = timekeep.StartTimeKeeping,
+                         endtimekeeping = timekeep.EndTimeKeeping,
                          phone = emp.Phone
                      }).ToList();
 

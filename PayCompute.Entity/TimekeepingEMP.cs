@@ -15,7 +15,7 @@ namespace PayCompute.Entity
         [DataType(DataType.Time)]
         public TimeSpan EndTimeKeeping { set; get; }
         public string Reason { set; get; }
-        public Furloughs Furlough { set; get; }
+        public bool Furlough { set; get; }
         public bool Status { set; get; }
         [ForeignKey("Employee")]
         public int EmployeeId { set; get; }

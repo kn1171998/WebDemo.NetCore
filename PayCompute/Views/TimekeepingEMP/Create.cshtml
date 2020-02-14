@@ -18,8 +18,8 @@
                     <div class="input-group mb-3">
                         @*<div class="input-group-prepend">
                             <label class="input-group-text bg-primary text-white">Select Date</label>
-                        </div>
-                        <input type="date" id="datepicker" name="datepicker" value="@DateTime.Now.ToString("dd/MM/yyyy")" />*@
+                        </div>*@
+                        @*<input type="hidden" id="datepicker" name="datepicker" value="@DateTime.Now.ToString("dd/MM/yy")" />*@
                         <div class="input-group-prepend">
                             <label class="input-group-text text-white bg-primary">Select Department</label>
                         </div>
@@ -57,9 +57,9 @@
     }
     <script>
 
-        $('#datepicker').change(function () {
-            callGetData();
-        });
+        //$('#datepicker').change(function () {
+        //    callGetData();
+        //});
         $('#dept').change(function () {
             callGetData();
         });
